@@ -38,14 +38,14 @@ class DataTransformation:
 
             num_pipeline = Pipeline(
                 steps = [
-                    ("imputer", SimpleImputer(strategy="median"))
+                    ("imputer", SimpleImputer(strategy="median")),
                     ("scaler", StandardScaler())
                     ]
             )
             cat_pipeline = Pipeline(
                 steps = [
                     ("imputer", SimpleImputer(strategy="most_frequent")),
-                    ("one_hot_encoder", OneHotEncoder())
+                    ("one_hot_encoder", OneHotEncoder(sparse_output=False)),
                     ("scaler", StandardScaler())
                 ]
             )
@@ -60,7 +60,7 @@ class DataTransformation:
 
             preprocessor = ColumnTransformer(
                 [
-                ("num_pipeline", num_pipeline, numerical_columns)
+                ("num_pipeline", num_pipeline, numerical_columns),
                 ("cat_pipelines", cat_pipeline, categorical_columns)
                 ]
 
@@ -96,7 +96,7 @@ class DataTransformation:
             )
 
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
-            input_feature_test_arr = preprocessing_obj.transform(input_feature_test_arr)
+            input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)
 
             train_arr = np.c_[
                 input_feature_train_arr, np.array(target_feature_train_df)
@@ -119,7 +119,7 @@ class DataTransformation:
             )
         
 
-        except:
-            pass
+        except Exception as e:
+            raise CustomException(e,sys)
         
 
