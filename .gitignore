@@ -220,3 +220,4 @@ __marimo__/
 # other
 notebook/catboost_info/
 artifacts/
+catboost_info/
